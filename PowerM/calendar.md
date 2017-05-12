@@ -28,37 +28,45 @@ in
 ```
 
 
-## 2) Function to get the Min and Max dates from a Table 
+## 2) Function to get the Min Max from a Table
 
 The example use a table called *TABLENAME* (replace it)
 The Table is used in step 3) as *ActualDates* so in case rename the created table.
 
 ```
 let
-    FnMinMaxDate = (TableName as table, StartDate as text, EndDate as text) =>
+    Fn = (TableName as table, ColumnName as text) =>
 	let
-	    DatesPerTable = Table.FromRecords({
-	         [MinDate = List.Min(Table.Column(TableName, StartDate)), 
-	          MaxDate = List.Max(Table.Column(TableName, EndDate))]
-	        }, 
-	        type table [MinDate = datetime, MaxDate = datetime])
+	    v = List.Min(Table.Column(TableName, ColumnName))       
 	in
-	    DatesPerTable,
-	    #"Invoked Function" = FnMinMaxDate(TABLENAME, "StartDate", "EndDate")
+	    v
 in
-    #"Invoked Function"
+    Fn
+ ``` 
+ 
+ 
+ ```
+let
+    Fn = (TableName as table, ColumnName as text) =>
+	let
+	    v = List.Max(Table.Column(TableName, ColumnName))       
+	in
+	    v
+in
+    Fn
  ``` 
  
  ## 3) Generate a Calendar Table using the Min and Max Date from a Table
  
-This step use the 1) *CalendarFunction* to create the calendar from 2) Table *Dates*
+This step use the 1) *CalendarFunction* to create the calendar using the *FnMin* and *FnMax* to find the date ranges
  
  ```
- let
-    Source = CalendarFunction(List.Min(Table.Column(ActualDates, "MinDate")), List.Min(Table.Column(ActualDates, "MaxDate")), null),
+let
+    Source = FnCalendar( FnMin(TABLENAME, "Date"),  FnMax(TABLENAME, "Date"), null),
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"MonthOfYear", Int64.Type}, {"QuarterOfYear", Int64.Type}, {"Year", Int64.Type}, {"DayOfMonth", Int64.Type}, {"DateInt", Int64.Type}, {"DayInWeek", Int64.Type}})
 in
     #"Changed Type"
+    
  ```
 
 
