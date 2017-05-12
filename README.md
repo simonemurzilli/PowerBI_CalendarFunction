@@ -1,2 +1,1 @@
-# PowerBI_CalendarFunction
-PowerBI Function to create a Calendar Table
+# PowerBI Examplex on PowerM and DAX
