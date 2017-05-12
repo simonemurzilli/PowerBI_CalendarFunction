@@ -1,5 +1,5 @@
 
-# Function to create a UI to generate a Calendar
+## Function to create a UI to generate a Calendar
 
 ```
 let CreateDateTable = (StartDate as date, EndDate as date, optional Culture as nullable text) as table =>
