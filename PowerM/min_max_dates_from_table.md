@@ -21,7 +21,7 @@ in
  
  ```
  let
-    Source = Query1( List.Min(Table.Column(Dates, "MinDate")), List.Min(Table.Column(Dates, "MaxDate")), null),
+    Source = Query(List.Min(Table.Column(Dates, "MinDate")), List.Min(Table.Column(Dates, "MaxDate")), null),
     #"Changed Type" = Table.TransformColumnTypes(Source,{{"MonthOfYear", Int64.Type}, {"QuarterOfYear", Int64.Type}, {"Year", Int64.Type}, {"DayOfMonth", Int64.Type}, {"DateInt", Int64.Type}, {"DayInWeek", Int64.Type}})
 in
     #"Changed Type"
