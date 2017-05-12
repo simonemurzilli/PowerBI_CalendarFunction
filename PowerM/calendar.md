@@ -1,6 +1,7 @@
 
 # Function to create a UI to generate a Calendar
 
+```
 let CreateDateTable = (StartDate as date, EndDate as date, optional Culture as nullable text) as table =>
   let
     DayCount = Duration.Days(Duration.From(EndDate - StartDate)),
@@ -23,3 +24,4 @@ let CreateDateTable = (StartDate as date, EndDate as date, optional Culture as n
     InsertWeekEnding
 in
   CreateDateTable
+```
