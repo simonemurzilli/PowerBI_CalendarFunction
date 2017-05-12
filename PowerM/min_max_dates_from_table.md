@@ -1,5 +1,5 @@
 
-# Function to get the Min and Max dates from a Table
+## Function to get the Min and Max dates from a Table
 
 ```
 let
@@ -17,7 +17,7 @@ in
     #"Invoked Function"
  ``` 
  
- # Generate a Calendar Table using the Min and Max Date from a Table
+ ## Generate a Calendar Table using the Min and Max Date from a Table
  
  ```
  let
