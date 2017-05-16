@@ -5,7 +5,7 @@ The function is called *CalendarFunction* and it is invoked in lates step
 ```
 let CreateDateTable = (StartDate as date, EndDate as date, optional Culture as nullable text) as table =>
   let
-    DayCount = Duration.Days(Duration.From(EndDate - StartDate)),
+    DayCount = Duration.Days(Duration.From(EndDate - StartDate)) +1,
     Source = List.Dates(StartDate,DayCount,#duration(1,0,0,0)),
     TableFromList = Table.FromList(Source, Splitter.SplitByNothing()),
     ChangedType = Table.TransformColumnTypes(TableFromList,{{"Column1", type date}}),
