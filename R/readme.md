@@ -1,5 +1,7 @@
 ## Create a naive simple dictionary on a dataset
 
+It creates an additional column with true/false values for each row. 
+
 ```
 # 'dataset' holds the input data for this script
 
