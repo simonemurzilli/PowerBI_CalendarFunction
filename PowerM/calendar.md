@@ -10,19 +10,22 @@ let CreateDateTable = (StartDate as date, EndDate as date, optional Culture as n
     TableFromList = Table.FromList(Source, Splitter.SplitByNothing()),
     ChangedType = Table.TransformColumnTypes(TableFromList,{{"Column1", type date}}),
     RenamedColumns = Table.RenameColumns(ChangedType,{{"Column1", "Date"}}),
-    InsertYear = Table.AddColumn(RenamedColumns, "Year", each Date.Year([Date])),
-    InsertQuarter = Table.AddColumn(InsertYear, "QuarterOfYear", each Date.QuarterOfYear([Date])),
-    InsertMonth = Table.AddColumn(InsertQuarter, "MonthOfYear", each Date.Month([Date])),
-    InsertDay = Table.AddColumn(InsertMonth, "DayOfMonth", each Date.Day([Date])),
-    InsertDayInt = Table.AddColumn(InsertDay, "DateInt", each [Year] * 10000 + [MonthOfYear] * 100 + [DayOfMonth]),
+    InsertYear = Table.AddColumn(RenamedColumns, "Year", each Date.Year([Date]), type number),
+    InsertQuarter = Table.AddColumn(InsertYear, "QuarterOfYear", each Date.QuarterOfYear([Date]), type number),
+    InsertMonth = Table.AddColumn(InsertQuarter, "MonthOfYear", each Date.Month([Date]), type number),
+    InsertDay = Table.AddColumn(InsertMonth, "DayOfMonth", each Date.Day([Date]), type number),
+    InsertDayInt = Table.AddColumn(InsertDay, "DateInt", each [Year] * 10000 + [MonthOfYear] * 100 + [DayOfMonth], type number),
     InsertMonthName = Table.AddColumn(InsertDayInt, "MonthName", each Date.ToText([Date], "MMMM", Culture), type text),
     InsertCalendarMonth = Table.AddColumn(InsertMonthName, "MonthInCalendar", each (try(Text.Range([MonthName],0,3)) otherwise [MonthName]) & " " & Number.ToText([Year])),
-    InsertCalendarQtr = Table.AddColumn(InsertCalendarMonth, "QuarterInCalendar", each "Q" & Number.ToText([QuarterOfYear]) & " " & Number.ToText([Year])),
-    InsertDayWeek = Table.AddColumn(InsertCalendarQtr, "DayInWeek", each Date.DayOfWeek([Date])),
+    InsertInsertCalendarMonthInt = Table.AddColumn(InsertCalendarMonth, "MonthInCalendarInt", each [Year] * 100 + [MonthOfYear], type number),
+    InsertCalendarQtr = Table.AddColumn(InsertInsertCalendarMonthInt, "QuarterInCalendar", each "Q" & Number.ToText([QuarterOfYear]) & " " & Number.ToText([Year])),
+    InsertCalendarQtrInt = Table.AddColumn(InsertCalendarQtr,  "QuarterInCalendarInt", each [Year] * 10 + Date.QuarterOfYear([Date]), type number),
+    InsertDayWeek = Table.AddColumn(InsertCalendarQtrInt, "DayInWeek", each Date.DayOfWeek([Date])),
     InsertDayName = Table.AddColumn(InsertDayWeek, "DayOfWeekName", each Date.ToText([Date], "dddd", Culture), type text),
-    InsertWeekEnding = Table.AddColumn(InsertDayName, "WeekEnding", each Date.EndOfWeek([Date]), type date)
+    InsertWeekEnding = Table.AddColumn(InsertDayName, "WeekEnding", each Date.EndOfWeek([Date]), type date),
+    InsertWorkingDay = Table.AddColumn(InsertWeekEnding, "WorkingDay", each if (Date.DayOfWeek([Date]) = 5 or Date.DayOfWeek([Date]) = 6) then 0 else 1, type number)
   in
-    InsertWeekEnding
+    InsertWorkingDay
 in
   CreateDateTable
 ```
